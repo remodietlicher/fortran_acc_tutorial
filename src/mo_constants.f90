@@ -1,0 +1,7 @@
+MODULE mo_constants
+
+IMPLICIT NONE
+
+INTEGER, PARAMETER :: n = 1000000
+
+END MODULE mo_constants
