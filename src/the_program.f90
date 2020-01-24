@@ -19,11 +19,19 @@ SUBROUTINE class_test
     obj%member1(:) = 0.0
     obj%member2(:) = 1.0
 
+    !$acc update device(obj%member1, obj%member2)
+    !$acc data create(tmp)
+
     TIME_LOOP: DO i=1,10
+        !$acc kernels default(present)
         tmp(:) = obj%member2(:)
         obj%member2(:) = obj%member1(:) + obj%member2(:)
         obj%member1(:) = tmp(:)
+        !$acc end kernels
     ENDDO TIME_LOOP
+
+    !$acc update host(obj%member1)
+    !$acc end data
 
     IF(obj%member1(1) == 55) THEN
         PRINT *, "CLASS TEST The result is correct: 55"
@@ -40,21 +48,30 @@ SUBROUTINE async_test
 
     USE mo_constants, ONLY: n
 
-    INTEGER :: a(n), i, j, tot
+    INTEGER :: a(n), i, j, k, tot
+
+    !$acc data create(a)
 
     tot = 0
     DO i=1,10
+        !$acc kernels default(present) async
         a(:) = i
+        !$acc end kernels
+        !$acc parallel async
+        !$acc loop gang vector reduction(+:tmp)
         DO j=1,n
             tot = tot + a(j)
-        ENDDO
+        ENDDO   
+        !$acc end parallel
     ENDDO
     tot = tot / n
 
+    !$acc end data
+
     IF(tot == 55) THEN
-        PRINT *, "CLASS TEST The result is correct: 55"
+        PRINT *, "ASYNC TEST The result is correct: 55"
     ELSE
-        PRINT *, "CLASS TEST Wrong result: ", tot, ". Should be 55"
+        PRINT *, "ASYNC TEST Wrong result: ", tot, ". Should be 55"
     ENDIF
         
 

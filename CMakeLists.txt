@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 project(hello)
 enable_language(Fortran)
 
-if(FC MATCHES "pgf90")
+if(CMAKE_Fortran_COMPILER_ID MATCHES "PGI")
     set(FFLAGS "-g -traceback -O -Mpreprocess -Mrecursive -Mallocatable=03 -acc=verystrict -ta=nvidia:cc60,cuda10.1 -Minfo=all -Mcuda")
     set(LDFLAGS "-ta=nvidia:cc60,cuda10.1 -Mcuda -Mnorpath")
 endif()
