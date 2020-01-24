@@ -21,9 +21,6 @@ SUBROUTINE initialize(this)
 
     ALLOCATE(this%member1(n))
     ALLOCATE(this%member2(n))
-    !$acc enter data create(this)
-    !$acc enter data create(this%member1)
-    !$acc enter data create(this%member2)
 
 END SUBROUTINE initialize
 
@@ -32,9 +29,6 @@ SUBROUTINE finalize(this)
 
     INTEGER :: i
 
-    !$acc exit data delete(this%member1)
-    !$acc exit data delete(this%member2)
-    !$acc exit data delete(this)
     DEALLOCATE(this%member1)
     DEALLOCATE(this%member2)
 
