@@ -8,13 +8,13 @@ TYPE base
     INTEGER, ALLOCATABLE :: member1(:)
     INTEGER, ALLOCATABLE :: member2(:)
     CONTAINS
-        PROCEDURE :: alloc => initialize
-        PROCEDURE :: dealloc => finalize
+        PROCEDURE :: alloc => my_alloc
+        PROCEDURE :: dealloc => my_dealloc
 END TYPE base
 
 CONTAINS
 
-SUBROUTINE initialize(this)
+SUBROUTINE my_alloc(this)
     CLASS(base), INTENT(INOUT) :: this
 
     INTEGER :: i
@@ -22,9 +22,9 @@ SUBROUTINE initialize(this)
     ALLOCATE(this%member1(n))
     ALLOCATE(this%member2(n))
 
-END SUBROUTINE initialize
+END SUBROUTINE my_alloc
 
-SUBROUTINE finalize(this)
+SUBROUTINE my_dealloc(this)
     CLASS(base), INTENT(INOUT) :: this
 
     INTEGER :: i
@@ -32,7 +32,7 @@ SUBROUTINE finalize(this)
     DEALLOCATE(this%member1)
     DEALLOCATE(this%member2)
 
-END SUBROUTINE finalize
+END SUBROUTINE my_dealloc
 
 END MODULE the_class
 
