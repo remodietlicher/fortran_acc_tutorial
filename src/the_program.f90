@@ -1,8 +1,6 @@
 PROGRAM the_program
 
     CALL class_test
-    CALL async_test
-
 
 END PROGRAM the_program
 
@@ -48,35 +46,3 @@ SUBROUTINE class_test
 
 END SUBROUTINE class_test
 
-SUBROUTINE async_test
-
-    USE mo_constants, ONLY: n
-
-    INTEGER :: a(n), i, j, k, tot
-
-    !$acc data create(a)
-
-    tot = 0
-    DO i=1,10
-        !$acc kernels default(present) async
-        a(:) = i
-        !$acc end kernels
-        !$acc parallel async
-        !$acc loop gang vector reduction(+:tmp)
-        DO j=1,n
-            tot = tot + a(j)
-        ENDDO   
-        !$acc end parallel
-    ENDDO
-    tot = tot / n
-
-    !$acc end data
-
-    IF(tot == 55) THEN
-        PRINT *, "ASYNC TEST The result is correct: 55"
-    ELSE
-        PRINT *, "ASYNC TEST Wrong result: ", tot, ". Should be 55"
-    ENDIF
-        
-
-END SUBROUTINE async_test
