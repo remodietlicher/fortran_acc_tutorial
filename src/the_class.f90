@@ -5,8 +5,8 @@ USE mo_constants, ONLY: n
 IMPLICIT NONE
 
 TYPE base
-    INTEGER, POINTER :: member1(:)
-    INTEGER, POINTER :: member2(:)
+    INTEGER, ALLOCATABLE :: member1(:)
+    INTEGER, ALLOCATABLE :: member2(:)
     CONTAINS
         PROCEDURE :: alloc => initialize
         PROCEDURE :: dealloc => finalize
