@@ -10,7 +10,7 @@ SUBROUTINE class_test
     USE the_class, ONLY: base
 
     TYPE(base) :: obj
-    INTEGER :: tmp(n), i
+    INTEGER :: tmp(n), i, j
 
     CALL obj%alloc
 
@@ -23,10 +23,10 @@ SUBROUTINE class_test
     TIME_LOOP: DO i=1,10
         !$acc parallel default(present) async
         !$acc loop gang vector
-        DO i=1,n
-            tmp(i) = obj%member2(i)
-            obj%member2(i) = obj%member1(i) + obj%member2(i)
-            obj%member1(i) = tmp(i)
+        DO j=1,n
+            tmp(j) = obj%member2(j)
+            obj%member2(j) = obj%member1(j) + obj%member2(j)
+            obj%member1(j) = tmp(j)
         ENDDO
         !$acc end parallel
     ENDDO TIME_LOOP
